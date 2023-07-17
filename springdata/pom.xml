@@ -10,6 +10,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>jpa-hibernate</module>
+        <module>springdata-jpa</module>
     </modules>
 
     <properties>
