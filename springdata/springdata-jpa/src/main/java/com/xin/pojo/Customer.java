@@ -1,6 +1,8 @@
 package com.xin.pojo;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
@@ -12,6 +14,8 @@ import javax.persistence.*;
 @Entity
 @Table(name = "t_customer")
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Customer {
 
     @Id
@@ -24,4 +28,9 @@ public class Customer {
 
     @Column(name = "cust_address")
     private String custAddress;
+
+    public Customer(String name, String address) {
+        this.custName = name;
+        this.custAddress = address;
+    }
 }

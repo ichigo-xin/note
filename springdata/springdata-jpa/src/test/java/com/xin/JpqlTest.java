@@ -1,43 +1,42 @@
 package com.xin;
 
 import com.xin.config.SpringDataConfig;
-import com.xin.pojo.Customer;
 import com.xin.repository.CustomerRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
-import java.util.Optional;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
- * @author: ichigo-xin
- * @create: 2023-07-18 00:48
- * @description:
- **/
-//@ContextConfiguration(locations = {"classpath:spring.xml"})
+ * @author : ichigo-xin
+ * @date 2023/7/18
+ */
 @ContextConfiguration(classes = SpringDataConfig.class)
 @RunWith(SpringJUnit4ClassRunner.class)
-public class JpaTest {
+public class JpqlTest {
 
     @Autowired
     private CustomerRepository repository;
 
     @Test
     public void test1(){
-        Optional<Customer> byId = repository.findById(1L);
-        System.out.println(byId.get());
+        System.out.println(repository.findCustomerByCustname("王五"));
     }
 
-    //插入
     @Test
     public void test2(){
-        Customer customer = new Customer();
-        customer.setCustName("王五");
-        customer.setCustAddress("北京");
-        repository.save(customer);
+        System.out.println(repository.updateCustomer("李四", 1L));
     }
 
+    @Test
+    public void test3(){
+        System.out.println(repository.deleteCustomer(10L));
+    }
 
+    @Test
+    public void test4(){
+        System.out.println(repository.findCustomerByCustnameBySql("王五"));
+    }
 }
