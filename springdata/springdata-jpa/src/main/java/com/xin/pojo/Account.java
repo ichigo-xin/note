@@ -1,6 +1,9 @@
 package com.xin.pojo;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 
@@ -12,13 +15,21 @@ import javax.persistence.*;
 
 @Table
 @Entity
-@Data
+@Getter
+@Setter
+@ToString
 public class Account {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String username;
 
+    private String password;
+
+    @OneToOne
+    @JoinColumn(name = "customer_id")
+    private Customer customer;
 
 }
