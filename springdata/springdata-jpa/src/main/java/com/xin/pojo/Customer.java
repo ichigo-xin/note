@@ -3,6 +3,7 @@ package com.xin.pojo;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
 /**
  * @author: ichigo-xin
@@ -10,7 +11,7 @@ import javax.persistence.*;
  * @description:
  **/
 @Entity
-@Table(name = "t_customer")
+@Table(name = "tb_customer")
 @Getter
 @Setter
 @ToString
@@ -54,6 +55,16 @@ public class Customer {
     // 设置外键的字段名
     @JoinColumn(name = "account_id")
     private Account account;
+
+    @OneToMany(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "customer_id")
+    private List<Message> messages;
+
+    @ManyToMany(cascade = CascadeType.PERSIST)
+    @JoinTable(name = "tb_customer_role",
+            joinColumns = {@JoinColumn(name = "c_id")},
+            inverseJoinColumns = {@JoinColumn(name = "r_id")})
+    private List<Role> roles;
 
     public Customer(String name, String address) {
         this.custName = name;

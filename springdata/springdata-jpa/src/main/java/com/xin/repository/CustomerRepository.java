@@ -34,4 +34,6 @@ public interface CustomerRepository extends PagingAndSortingRepository<Customer,
     @Query(value="select * from t_customer where cust_name =:custname",nativeQuery = true)
     List<Customer> findCustomerByCustnameBySql(@Param("custname") String custname);
 
+    List<Customer> findByRolesId(Long roleId);
+
 }
