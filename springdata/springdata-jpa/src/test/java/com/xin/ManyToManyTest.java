@@ -34,12 +34,14 @@ public class ManyToManyTest {
 
     // 插入
     @Test
+    @Transactional
+    @Commit
     public void test1() {
         List<Role> roles = new ArrayList<>();
         roles.add(new Role("超级管理员"));
         roles.add(new Role("日志管理员"));
         Customer customer = new Customer();
-        customer.setCustName("李四");
+        customer.setCustName("王五");
         customer.setRoles(roles);
         customerRepository.save(customer);
     }
@@ -107,5 +109,53 @@ public class ManyToManyTest {
         Role role = new Role("用户管理员");
         roleRepository.save(role);
     }
+
+    /**
+     * 新增
+     * CascadeType.DETACH 下，两个repository都要save
+     */
+    @Test
+    @Transactional
+    @Commit
+    public void test8() {
+        List<Role> roles = new ArrayList<>();
+        roles.add(new Role("超级管理员"));
+        roles.add(new Role("日志管理员"));
+        Customer customer = new Customer();
+        customer.setCustName("赵六");
+        customer.setRoles(roles);
+        customerRepository.save(customer);
+        roleRepository.saveAll(roles);
+    }
+
+    /**
+     * 删除
+     * CascadeType.DETACH 下进行删除，对于manytomany需要先删除中间表数据，再删除原表数据，关联表数据不能删除
+     */
+    @Test
+    @Transactional
+    @Commit
+    public void test9() {
+
+    }
+
+    /**
+     * 修改
+     * CascadeType.DETACH 下进行修改，用get方法来获取关联表的对象，然后进行修改，最后save
+     */
+    @Test
+    @Transactional
+    @Commit
+    public void test10() {
+        Customer customer = customerRepository.findById(11L).get();
+        customer.setCustName("222王五222");
+        List<Role> roles = customer.getRoles();
+        roles.get(0).setName("222管理员22");
+        customerRepository.save(customer);
+    }
+
+
+
+
 
 }
