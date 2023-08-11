@@ -1,6 +1,6 @@
 from datetime import date, datetime
 
-from pydantic import BaseModel, ValidationError, constr
+from pydantic import BaseModel, ValidationError, constr, ConfigDict
 from sqlalchemy import ARRAY, Column, Integer, String
 from sqlalchemy.orm.decl_api import declarative_base
 
@@ -35,7 +35,7 @@ print("\033[1;31m" + "---------模型类的属性和方法-------" + "\033[0m")
 print(user.model_dump())
 print(user.model_copy())
 print(User.model_validate(obj=external_data))  # 校验数据
-with open('user.json') as f:
+with open("user.json") as f:
     json_data = f.read()
 
 # path.write_text('{"id": "12345", "signup_ts": "2017-06-01 12:22", "friends": [1, "2", "3"]}')
@@ -55,7 +55,11 @@ class Dog(BaseModel):
     sound: list[Sound]
 
 
-dog = Dog(birthday=date.today(), weight=6.6, sound=[{"sound": "wang wang ~"}, {"sound": "ying ying ~"}])
+dog = Dog(
+    birthday=date.today(),
+    weight=6.6,
+    sound=[{"sound": "wang wang ~"}, {"sound": "ying ying ~"}],
+)
 print(dog)
 
 print("\033[1;31m" + "---------ORM模型：从类实例创建符合ORM对象的模型-------" + "\033[0m")
@@ -64,7 +68,7 @@ Base = declarative_base()
 
 
 class CompanyOrm(Base):
-    __tablename__ = 'companies'
+    __tablename__ = "companies"
     id = Column(Integer, primary_key=True, nullable=False)
     public_key = Column(String(20), unique=True, nullable=False, index=True)
     name = Column(String(63), unique=True)
@@ -77,12 +81,14 @@ class CompanyMode(BaseModel):
     name: constr(max_length=63)
     domains: list[constr(max_length=255)]
 
-    class Config:
-        from_attributes = True  # 使用 from_attributes 配置项
-        orm_mode = True
+    # class Config:
+    #     from_attributes = True  # 使用 from_attributes 配置项
+    #     orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
 
 
-co_orm = CompanyOrm(id=1, public_key='muke', name='testing', domains=['123', '456'])
+co_orm = CompanyOrm(id=1, public_key="muke", name="testing", domains=["123", "456"])
 
-company_model = CompanyMode.from_orm(co_orm)  # 使用 from_orm 方法
+# company_model = CompanyMode.from_orm(co_orm)  # 使用 from_orm 方法
+company_model = CompanyMode.model_validate(co_orm)  # 使用 model_validate 方法
 print(company_model)
