@@ -1,6 +1,6 @@
 from enum import Enum
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Path, Query
 
 app03 = APIRouter()
 
@@ -29,3 +29,42 @@ async def lastest(city: CityName):
     if city == CityName.Beijing:
         return {"city_name": city, "confirmed": 971, "death": 9}
     return {"city_name": city, "latest": "unknown"}
+
+
+@app03.get("/files/file")
+def filepath1(file_path: str):
+    return f"The file path is {file_path}"
+
+
+@app03.get("/files/{file_path:path}")  # 通过path parameters传递文件路径
+def filepath(file_path: str):
+    return f"The file path is {file_path}"
+
+
+@app03.get("/path_/{num}")
+def path_params_validate(
+        num: int = Path(..., title="Your Number", description="不可描述", ge=1, le=10)
+):
+    return num
+
+
+"""查询参数和字符串验证"""
+
+@app03.get("/query")
+def page_limit(page: int = 1, limit: int | None = None):
+    if limit:
+        return {'page': page, 'limit': limit}
+    return {'page': page}
+
+
+@app03.get("/query/bool/conversion")
+def type_conversion(param: bool = False):
+    return param
+
+
+@app03.get("/query/validations")
+def query_params_validations(
+        value: str = Query(..., min_length=8, max_length=16, regex="^a"),
+        values: list[str] = Query(default=["v1", "v2"], alias="alias_name")
+):
+    return value, values
